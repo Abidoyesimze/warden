@@ -116,6 +116,17 @@ Lucide, 1.5px stroke, 16px in buttons and nav, 12–14px inline. The logo is a g
 | EmptyState, ErrorState | `components/empty-state.tsx` |
 | Primitives (Button, Card, Dialog, Switch, Tooltip, Skeleton) | `components/ui/` (shadcn/ui pattern, restyled) |
 
+## Routes
+
+| Route | What |
+|---|---|
+| `/` | Landing page (`app/(marketing)`): what Warden is, how it works, security model, rules, demo beats, NEAR tech, limits |
+| `/dashboard`, `/upload`, `/review`, `/invoices/[id]`, `/treasury`, `/settings` | The app (`app/(app)`), wrapped in the AppShell |
+
+The landing page uses the same tokens. Its hero is a looping `DecisionDemo` (clean invoice → Paid, tampered → Under review,
+duplicate → Blocked); sections fade up once on scroll (`Reveal`), and a pulse travels along the How-it-works pipeline.
+With reduced motion, the hero shows one static result and the pulse is hidden.
+
 ## Data
 
 `lib/api/index.ts` picks the data source:

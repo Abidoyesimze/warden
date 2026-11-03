@@ -13,7 +13,7 @@ import { cn, nearAccountUrl } from "@/lib/format";
 import { getWallet } from "@/lib/wallet";
 
 const NAV = [
-  { href: "/", label: "Dashboard", icon: LayoutGrid },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutGrid },
   { href: "/upload", label: "Upload invoice", icon: FileUp },
   { href: "/review", label: "Review queue", icon: Inbox, badge: true },
   { href: "/treasury", label: "Treasury & limits", icon: ShieldCheck },
@@ -29,7 +29,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => setOpen(false), [pathname]);
 
-  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const isActive = (href: string) => pathname.startsWith(href);
 
   const nav = (
     <nav className="flex flex-col gap-0.5 px-2" aria-label="Main">
@@ -58,7 +58,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const sidebar = (
     <div className="flex h-full flex-col">
       <div className="flex h-14 items-center px-4">
-        <Link href="/" aria-label="Warden home">
+        <Link href="/" aria-label="Warden home page">
           <Logo />
         </Link>
       </div>

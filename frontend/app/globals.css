@@ -126,3 +126,15 @@
     animation: none;
   }
 }
+
+/* Landing: pulse that travels along the pipeline connector */
+@keyframes warden-travel {
+  0% { left: -6rem; }
+  100% { left: 100%; }
+}
+.pipeline-pulse {
+  animation: warden-travel 4.5s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pipeline-pulse { display: none; }
+}

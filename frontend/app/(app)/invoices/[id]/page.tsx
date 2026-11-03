@@ -44,7 +44,7 @@ export default function InvoicePage() {
 
 function BackLink() {
   return (
-    <Link href="/" className="mb-4 inline-flex items-center gap-1.5 text-[12px] text-muted hover:text-fg">
+    <Link href="/dashboard" className="mb-4 inline-flex items-center gap-1.5 text-[12px] text-muted hover:text-fg">
       <ArrowLeft className="size-3.5" strokeWidth={1.5} />
       Overview
     </Link>

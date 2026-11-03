@@ -2,13 +2,13 @@ import "@fontsource-variable/inter";
 import "@fontsource-variable/jetbrains-mono";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
-import { AppShell } from "@/components/app-shell";
 import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: { default: "Warden", template: "%s · Warden" },
-  description: "AI that pays real invoices. Nothing else.",
+  description:
+    "Warden is an AI finance agent that pays small businesses' cross-border supplier invoices in stablecoins and stops fake or altered invoices before any money moves. Built on NEAR.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={GeistSans.variable}>
       <body>
         <Providers>
-          <AppShell>{children}</AppShell>
+          {children}
         </Providers>
       </body>
     </html>
