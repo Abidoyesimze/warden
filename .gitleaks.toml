@@ -1,0 +1,12 @@
+title = "Warden secret scan"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "near-private-key"
+description = "NEAR ed25519 private key"
+regex = '''ed25519:[1-9A-HJ-NP-Za-km-z]{60,}'''
+
+[allowlist]
+paths = ['''\.env\.example$''']

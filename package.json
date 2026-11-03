@@ -1,0 +1,15 @@
+{
+  "name": "warden",
+  "private": true,
+  "description": "AI that pays real invoices. Nothing else.",
+  "workspaces": ["agent", "backend"],
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "npm run dev -w backend",
+    "test": "npm run test --workspaces",
+    "test:fraud": "npm run test:fraud -w agent",
+    "test:contract": "cd smart-contract && cargo test",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces"
+  }
+}

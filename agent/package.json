@@ -1,0 +1,21 @@
+{
+  "name": "@warden/agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reads invoices privately on NEAR AI Cloud and runs fraud rules. Holds no keys and cannot move money.",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:fraud": "echo 'Fraud suite arrives in Phase 4' && exit 0",
+    "lint": "eslint src test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "openai": "^7.47.0",
+    "pdf-parse": "^2.4.5",
+    "zod": "^4.6.7"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "name": "@warden/backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Express API: stores invoices, calls the agent, talks to the treasury contract and 1Click.",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "tsx src/server.ts",
+    "test": "vitest run",
+    "lint": "eslint src test",
+    "typecheck": "tsc --noEmit"
+  }
+}
