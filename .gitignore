@@ -16,3 +16,5 @@ coverage/
 # NEAR credentials must never be committed
 **/.near-credentials/
 **/*-key.json
+next-env.d.ts
+*.tsbuildinfo
