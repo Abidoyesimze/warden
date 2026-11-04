@@ -136,6 +136,31 @@ describe("backend pipeline + routes (fakes, no real secrets)", () => {
     expect(res.body.vendors.length).toBe(3);
   });
 
+  it("GET /treasury degrades to balance '0' if the USDC token call fails", async () => {
+    deps = fakeDeps(NORMAL_EXTRACTED, chain);
+    deps.chain.ftBalanceOf = async () => {
+      throw new Error("account usdc-mock.testnet does not exist");
+    };
+    const app = createApp(deps);
+    const res = await request(app).get("/treasury");
+    expect(res.status).toBe(200);
+    expect(res.body.balance).toBe("0");
+    expect(res.body.vendors.length).toBe(3);
+  });
+
+  it("returns a JSON error (not an HTML stack trace) when a chain call fails outright", async () => {
+    deps = fakeDeps(NORMAL_EXTRACTED, chain);
+    deps.chain.getConfig = async () => {
+      throw new Error("RPC unreachable");
+    };
+    const app = createApp(deps);
+    const res = await request(app).get("/treasury");
+    expect(res.status).toBe(500);
+    expect(res.type).toBe("application/json");
+    expect(res.body).toHaveProperty("message");
+    expect(res.body).toHaveProperty("action");
+  });
+
   it("executes an approved payment through 1Click and records the receipt", async () => {
     deps = fakeDeps(NORMAL_EXTRACTED, chain);
     const done = await uploadInvoice(deps);

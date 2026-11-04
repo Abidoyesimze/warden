@@ -71,7 +71,18 @@ Deployed and smoke-tested end to end on testnet while waiting on mainnet funding
 | Agent | `warden-agent-cowry.testnet` |
 | Owner | `warden-owner-cowry.testnet` |
 
-Verified live: deploy + `new` init, `upsert_vendor` (event log confirmed correct `EVENT_JSON:...` shape), `propose_payment` auto-approving a normal amount (`status: "Approved"`), and `propose_payment` holding an over-limit amount (`status: "Held"`, `flags: ["OVER_AUTO_PAY_LIMIT"]`). `usdc_token` is set to a placeholder (`usdc-mock.testnet`, not a real deployed token) since testnet has no real USDC — `execute_payment`'s actual `ft_transfer` leg is untested here and will be first exercised for real on mainnet.
+Verified live: deploy + `new` init, `upsert_vendor` (event log confirmed correct `EVENT_JSON:...` shape), `propose_payment` auto-approving a normal amount (`status: "Approved"`), and `propose_payment` holding an over-limit amount (`status: "Held"`, `flags: ["OVER_AUTO_PAY_LIMIT"]`).
+
+**Update (same day):** `usdc_token` was initially set to a placeholder (`usdc-mock.testnet`) that doesn't exist, which crashed `GET /treasury` once the frontend was wired up (`ft_balance_of` against a nonexistent contract). Turns out testnet has real Circle USDC — `3e2210e1184b45b64c8a434c0a7e7b23cc04ea7eb7a6c3c32520d03d4afcb8af` (verified live via `ft_metadata`: symbol `USDC`, 6 decimals, NEP-141). The contract has no `usdc_token` setter (deliberately — no reason a treasury should be able to swap its own token mid-flight) and `new` is `#[init]`-guarded against re-running, so the fix was: delete `warden-treasury-cowry.testnet`, recreate it, redeploy with the real token id, register both treasury and owner on it (`storage_deposit`, 0.00125 NEAR each — confirmed via `storage_balance_bounds`), and re-add the 3 vendors. Old test payment ids 0/1 from the first deployment are gone with it; fine, they were just smoke-test data.
+
+Funding the treasury still needs real testnet USDC in the owner account first (Circle's public faucet, faucet.circle.com, supports NEAR Testnet directly with just an account id — no API key needed for that path), then `ft_transfer_call` from owner to treasury (plain `ft_transfer` would also technically credit the balance, but `ft_transfer_call` is what exercises `ft_on_transfer`'s owner-only check, matching the contract's actual intended funding path). Not done yet — blocked on someone requesting from the faucet to `warden-owner-cowry.testnet`.
+
+### Backend robustness fixes (2026-11-04)
+
+Found while wiring the frontend to the live backend:
+- `GET /treasury` now degrades to `balance: "0"` instead of failing outright if the USDC token call fails (wrong/missing token id, not yet registered, etc.) — the rest of the treasury view (limits, vendors, pause state) still loads.
+- Added a final Express error-handling middleware returning `{ message, action }` JSON (matching `docs/api.md`'s error contract) instead of Express's default HTML stack-trace page, which was leaking file paths. Express 5 forwards rejected async route handlers to it automatically, so routes don't each need their own try/catch for this.
+- Both covered by tests in `backend/test/app.test.ts`.
 
 ## Phase log
 

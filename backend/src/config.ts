@@ -9,7 +9,7 @@ dotenv.config({ path: path.join(repoRoot, ".env"), quiet: true });
 
 // Secrets are optional here so tests and the offline fraud suite run without them.
 // Code that needs one calls requireConfig(), which fails with a clear message.
-const Env = z.object({
+export const Env = z.object({
   NEAR_NETWORK: z.enum(["mainnet", "testnet"]).default("mainnet"),
   NEAR_RPC_URL: z.string().url().default("https://rpc.mainnet.near.org"),
   TREASURY_CONTRACT_ID: z.string().optional(),
