@@ -1,0 +1,32 @@
+[
+  {
+    "id": "shenzhen-pack",
+    "name": "Shenzhen Packaging Co.",
+    "currency": "USD",
+    "destChain": "base",
+    "destAsset": "nep141:base-0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.omft.near",
+    "destAddress": "0xAb37d4C9F2E6b8A1D5c3F7e9B2a4D6c8F1e3B5A9",
+    "maxAmount": "5.00",
+    "active": true
+  },
+  {
+    "id": "accra-design",
+    "name": "Accra Design Studio",
+    "currency": "USD",
+    "destChain": "solana",
+    "destAsset": "nep141:sol-c800a4bd850783ccb82c2b2c7e84175443606352.omft.near",
+    "destAddress": "7NsrEDkpcfX4w6qkycygi3n9c8n9F8MFGwE4whXTa5RA",
+    "maxAmount": "3.00",
+    "active": true
+  },
+  {
+    "id": "lisbon-dev",
+    "name": "Lisbon Dev Contractors",
+    "currency": "USD",
+    "destChain": "base",
+    "destAsset": "nep141:base-0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.omft.near",
+    "destAddress": "0x9F3c1A7e2D5b8A4c6F0e3B7d2A9c5E8f1B4a7C3d",
+    "maxAmount": "5.00",
+    "active": true
+  }
+]

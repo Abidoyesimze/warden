@@ -1,0 +1,12 @@
+[
+  { "invoiceNumber": "SZ-2026-0501", "amount": "1.00", "currency": "USD", "issueDate": "2026-05-05", "status": "paid" },
+  { "invoiceNumber": "SZ-2026-0522", "amount": "1.10", "currency": "USD", "issueDate": "2026-05-22", "status": "paid" },
+  { "invoiceNumber": "SZ-2026-0609", "amount": "1.20", "currency": "USD", "issueDate": "2026-06-09", "status": "paid" },
+  { "invoiceNumber": "SZ-2026-0628", "amount": "1.30", "currency": "USD", "issueDate": "2026-06-28", "status": "paid" },
+  { "invoiceNumber": "SZ-2026-0715", "amount": "1.40", "currency": "USD", "issueDate": "2026-07-15", "status": "paid" },
+  { "invoiceNumber": "SZ-2026-0909", "amount": "1.20", "currency": "USD", "issueDate": "2026-08-15", "status": "paid" },
+  { "invoiceNumber": "SZ-2026-0812", "amount": "1.50", "currency": "USD", "issueDate": "2026-08-02", "status": "paid" },
+  { "invoiceNumber": "SZ-2026-0905", "amount": "1.55", "currency": "USD", "issueDate": "2026-09-05", "status": "paid" },
+  { "invoiceNumber": "SZ-2026-0930", "amount": "1.60", "currency": "USD", "issueDate": "2026-09-30", "status": "paid" },
+  { "invoiceNumber": "SZ-2026-1050", "amount": "1.45", "currency": "USD", "issueDate": "2026-10-22", "status": "paid" }
+]

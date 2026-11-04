@@ -1,0 +1,21 @@
+{
+  "vendor_name": "Shenzhen Packaging Co.",
+  "vendor_identifier": "shenzhen-pack",
+  "invoice_number": "SZ-2026-1102",
+  "issue_date": "2026-10-26",
+  "due_date": "2026-11-11",
+  "currency": "USD",
+  "total_amount": "1.30",
+  "line_items": [
+    { "description": "Custom packaging boxes, 480 units", "quantity": "1", "unit_price": "1.30", "amount": "1.30" }
+  ],
+  "payment_details": {
+    "method": "crypto",
+    "chain": "base",
+    "asset": "USDC",
+    "address": "0xBAD1BAD1BAD1BAD1BAD1BAD1BAD1BAD1BAD1BAD1",
+    "bank_name": null
+  },
+  "instructions_found": [],
+  "extraction_confidence": "high"
+}

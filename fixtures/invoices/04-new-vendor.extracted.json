@@ -1,0 +1,21 @@
+{
+  "vendor_name": "Global Freight Partners",
+  "vendor_identifier": null,
+  "invoice_number": "GFP-2026-001",
+  "issue_date": "2026-10-28",
+  "due_date": "2026-11-12",
+  "currency": "USD",
+  "total_amount": "1.40",
+  "line_items": [
+    { "description": "Freight forwarding fee", "quantity": "1", "unit_price": "1.40", "amount": "1.40" }
+  ],
+  "payment_details": {
+    "method": "crypto",
+    "chain": "base",
+    "asset": "USDC",
+    "address": "0xC0FFEEC0FFEEC0FFEEC0FFEEC0FFEEC0FFEEC0FF",
+    "bank_name": null
+  },
+  "instructions_found": [],
+  "extraction_confidence": "high"
+}

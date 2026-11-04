@@ -1,0 +1,22 @@
+export const RISK_CONFIG = {
+  lookalikeMaxEditDistance: 2,
+  amountAnomalyMedianMultiplier: 2,
+  amountAnomalyMaxMultiplier: 1.5,
+  minHistoryForAmountCheck: 3,
+  nearDuplicateWindowDays: 14,
+  totalMismatchTolerance: 0.01,
+  dueSoonDays: 2,
+  urgencyWords: ["urgent", "immediately", "today", "asap", "right away"],
+  injectionPhrases: [
+    "ignore previous",
+    "ignore the above",
+    "disregard the above",
+    "pay to",
+    "pay this address instead",
+    "new account",
+    "new wallet",
+    "ai assistant",
+    "system:",
+    "instead of the above",
+  ],
+} as const;

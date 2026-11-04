@@ -1,0 +1,20 @@
+[
+  { "file": "01-normal", "decision": "PAY", "flags": [] },
+  { "file": "02-changed-wallet", "decision": "HOLD", "flags": ["DEST_MISMATCH"] },
+  { "file": "03-hidden-instructions", "decision": "HOLD", "flags": ["INJECTION_TEXT", "DEST_MISMATCH"] },
+  { "file": "04-new-vendor", "decision": "HOLD", "flags": ["UNKNOWN_VENDOR"] },
+  { "file": "05-lookalike-vendor", "decision": "HOLD", "flags": ["LOOKALIKE_VENDOR"] },
+  { "file": "06-inflated-amount", "decision": "HOLD", "flags": ["AMOUNT_ANOMALY"] },
+  { "file": "07-duplicate", "decision": "BLOCK", "flags": ["DUPLICATE_NUMBER"] },
+  { "file": "08-resent-edited", "decision": "HOLD", "flags": ["NEAR_DUPLICATE"] },
+  { "file": "09-currency-change", "decision": "HOLD", "flags": ["CURRENCY_CHANGE"] },
+  { "file": "10-bad-total", "decision": "HOLD", "flags": ["TOTAL_MISMATCH"] },
+  { "file": "11-urgent-future-date", "decision": "HOLD", "flags": ["DATE_ANOMALY"] },
+  {
+    "file": "12-large-legit",
+    "decision": "PAY",
+    "flags": [],
+    "note": "Rules see nothing wrong; the contract holds this one for being over the $2 demo auto-pay limit."
+  },
+  { "file": "13-normal-accra", "decision": "PAY", "flags": [] }
+]

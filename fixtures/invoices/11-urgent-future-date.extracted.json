@@ -1,0 +1,21 @@
+{
+  "vendor_name": "Shenzhen Packaging Co.",
+  "vendor_identifier": "shenzhen-pack",
+  "invoice_number": "SZ-2026-1111",
+  "issue_date": "2027-01-15",
+  "due_date": "2027-01-20",
+  "currency": "USD",
+  "total_amount": "1.30",
+  "line_items": [
+    { "description": "Final notice: payment due today, custom packaging boxes", "quantity": "1", "unit_price": "1.30", "amount": "1.30" }
+  ],
+  "payment_details": {
+    "method": "crypto",
+    "chain": "base",
+    "asset": "USDC",
+    "address": "0xAb37d4C9F2E6b8A1D5c3F7e9B2a4D6c8F1e3B5A9",
+    "bank_name": null
+  },
+  "instructions_found": [],
+  "extraction_confidence": "high"
+}
