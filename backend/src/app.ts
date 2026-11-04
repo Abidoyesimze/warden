@@ -29,7 +29,10 @@ export function createApp(deps: AppDeps): Express {
     const [config, vendors, balance] = await Promise.all([
       deps.chain.getConfig<ChainConfig>(),
       deps.chain.listVendors<[string, ChainVendor][]>(),
-      deps.chain.ftBalanceOf(deps.usdcTokenId, deps.contractId),
+      // The USDC token call is the one most likely to fail (wrong id, token
+      // not yet deployed/registered) — degrade to "0" rather than taking
+      // down the whole dashboard over a balance we can't read.
+      deps.chain.ftBalanceOf(deps.usdcTokenId, deps.contractId).catch(() => "0"),
     ]);
     res.json(mapTreasury(deps.contractId, balance, config, vendors));
   });
@@ -119,6 +122,22 @@ export function createApp(deps: AppDeps): Express {
       onChainInvoiceHash: payment.invoice_hash,
       onChainAttestationHash: payment.attestation_hash,
     });
+  });
+
+  // Final error handler. Express 5 forwards rejected async route handlers
+  // here automatically, so routes don't each need their own try/catch —
+  // without this, Express's default handler returns an HTML page with a
+  // full stack trace, which leaks file paths and breaks the frontend's
+  // { message, action } error contract (see docs/api.md).
+  app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    console.error(err);
+    if (res.headersSent) return;
+    sendError(
+      res,
+      500,
+      err instanceof Error ? err.message : "Something went wrong.",
+      "Try again, or check the server logs if this keeps happening.",
+    );
   });
 
   return app;
