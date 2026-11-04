@@ -1,0 +1,21 @@
+{
+  "vendor_name": "Lisbon Dev Contractors",
+  "vendor_identifier": "lisbon-dev",
+  "invoice_number": "LB-2026-1101",
+  "issue_date": "2026-10-28",
+  "due_date": "2026-11-15",
+  "currency": "USD",
+  "total_amount": "2.50",
+  "line_items": [
+    { "description": "Smart contract integration, October sprint", "quantity": "1", "unit_price": "2.50", "amount": "2.50" }
+  ],
+  "payment_details": {
+    "method": "crypto",
+    "chain": "base",
+    "asset": "USDC",
+    "address": "0x9F3c1A7e2D5b8A4c6F0e3B7d2A9c5E8f1B4a7C3d",
+    "bank_name": null
+  },
+  "instructions_found": [],
+  "extraction_confidence": "high"
+}

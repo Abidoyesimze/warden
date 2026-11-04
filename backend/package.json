@@ -12,10 +12,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@types/multer": "^2.3.0",
     "@warden/agent": "^0.1.0",
     "better-sqlite3": "^13.0.3",
     "dotenv": "^18.0.9",
     "express": "^5.3.0",
+    "multer": "^2.5.0",
     "near-api-js": "^7.2.0",
     "zod": "^4.6.7"
   },
@@ -23,7 +25,9 @@
     "@types/better-sqlite3": "^7.6.0",
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
+    "@types/supertest": "^7.2.1",
     "eslint": "^9.30.0",
+    "supertest": "^7.3.1",
     "tsx": "^4.20.0",
     "typescript": "^5.9.0",
     "typescript-eslint": "^8.40.0",

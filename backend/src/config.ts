@@ -17,6 +17,8 @@ const Env = z.object({
   AGENT_PRIVATE_KEY: z.string().optional(),
   OWNER_ACCOUNT_ID: z.string().optional(),
   USDC_TOKEN_ID: z.string().optional(),
+  NEAR_AI_API_KEY: z.string().optional(),
+  NEAR_AI_MODEL: z.string().optional(),
   ONECLICK_BASE_URL: z.string().url().default("https://1click.chaindefuser.com"),
   ONECLICK_JWT: z.string().optional(),
   WARDEN_FEE_BPS: z.coerce.number().int().min(0).max(10_000).default(0),

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "vitest run",
-    "test:fraud": "echo 'Fraud suite arrives in Phase 4' && exit 0",
+    "test:fraud": "vitest run test/fraud.test.ts",
     "lint": "eslint src test",
     "typecheck": "tsc --noEmit"
   },

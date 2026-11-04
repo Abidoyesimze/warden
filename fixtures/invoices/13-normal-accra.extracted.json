@@ -1,0 +1,21 @@
+{
+  "vendor_name": "Accra Design Studio",
+  "vendor_identifier": "accra-design",
+  "invoice_number": "AC-2026-1102",
+  "issue_date": "2026-10-29",
+  "due_date": "2026-11-13",
+  "currency": "USD",
+  "total_amount": "1.10",
+  "line_items": [
+    { "description": "Packaging artwork design, revision 2", "quantity": "1", "unit_price": "1.10", "amount": "1.10" }
+  ],
+  "payment_details": {
+    "method": "crypto",
+    "chain": "solana",
+    "asset": "USDT",
+    "address": "7NsrEDkpcfX4w6qkycygi3n9c8n9F8MFGwE4whXTa5RA",
+    "bank_name": null
+  },
+  "instructions_found": [],
+  "extraction_confidence": "high"
+}

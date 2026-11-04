@@ -1,0 +1,8 @@
+[
+  { "invoiceNumber": "LB-2026-0301", "amount": "2.00", "currency": "USD", "issueDate": "2026-03-01", "status": "paid" },
+  { "invoiceNumber": "LB-2026-0415", "amount": "2.10", "currency": "USD", "issueDate": "2026-04-15", "status": "paid" },
+  { "invoiceNumber": "LB-2026-0601", "amount": "2.20", "currency": "USD", "issueDate": "2026-06-01", "status": "paid" },
+  { "invoiceNumber": "LB-2026-0720", "amount": "2.30", "currency": "USD", "issueDate": "2026-07-20", "status": "paid" },
+  { "invoiceNumber": "LB-2026-0905", "amount": "2.40", "currency": "USD", "issueDate": "2026-09-05", "status": "paid" },
+  { "invoiceNumber": "LB-2026-1010", "amount": "2.50", "currency": "USD", "issueDate": "2026-10-10", "status": "paid" }
+]
