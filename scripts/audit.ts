@@ -48,7 +48,7 @@ async function main() {
     process.exit(1);
   }
   const rpcFlagIndex = process.argv.indexOf("--rpc");
-  const rpcUrl = rpcFlagIndex !== -1 ? process.argv[rpcFlagIndex + 1] : "https://rpc.mainnet.near.org";
+  const rpcUrl = rpcFlagIndex !== -1 ? process.argv[rpcFlagIndex + 1] : "https://free.rpc.fastnear.com";
   const provider = new JsonRpcProvider({ url: rpcUrl! });
 
   const view = <T,>(method: string, args: Record<string, unknown> = {}) =>

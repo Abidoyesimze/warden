@@ -11,7 +11,9 @@ dotenv.config({ path: path.join(repoRoot, ".env"), quiet: true });
 // Code that needs one calls requireConfig(), which fails with a clear message.
 export const Env = z.object({
   NEAR_NETWORK: z.enum(["mainnet", "testnet"]).default("mainnet"),
-  NEAR_RPC_URL: z.string().url().default("https://rpc.mainnet.near.org"),
+  // rpc.mainnet.near.org is deprecated/rate-limited; FastNEAR is the
+  // NEAR-docs-recommended replacement (test.rpc.fastnear.com for testnet).
+  NEAR_RPC_URL: z.string().url().default("https://free.rpc.fastnear.com"),
   TREASURY_CONTRACT_ID: z.string().optional(),
   AGENT_ACCOUNT_ID: z.string().optional(),
   AGENT_PRIVATE_KEY: z.string().optional(),
