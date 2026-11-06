@@ -156,7 +156,7 @@ function Detail({ invoice, contractId }: { invoice: InvoiceDetail; contractId: s
                     <Hash value={invoice.attestation.chatId} head={14} tail={4} />
                   </Evidence>
                   <Evidence label="Enclave signer">
-                    <Hash value={invoice.attestation.signingAddress} head={8} tail={6} />
+                    {invoice.attestation.signingAddress ? <Hash value={invoice.attestation.signingAddress} head={8} tail={6} /> : <span className="text-muted">Not reported</span>}
                   </Evidence>
                   <Evidence label="Attestation hash">
                     <Hash value={invoice.attestation.hash} head={8} tail={6} />

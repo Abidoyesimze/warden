@@ -31,15 +31,15 @@ export function ActivityFeed({ payments, loading, limit }: { payments?: PaymentS
   return (
     <ul className="divide-y divide-line">
       {rows.map((p) => (
-        <li key={p.invoiceId}>
-          <Link
-            href={`/invoices/${p.invoiceId}`}
+        <li key={p.id}>
+          <RowLink
+            invoiceId={p.invoiceId}
             className="group grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 px-4 py-3 transition-colors duration-150 hover:bg-surface-2 sm:grid-cols-[minmax(0,1fr)_96px_136px_16px]"
           >
             <div className="min-w-0">
               <p className="truncate text-[13px] text-fg">{p.vendorName}</p>
               <p className="truncate text-[12px] text-muted">
-                <span className="num">{p.invoiceNumber}</span>
+                <span className="num">{p.invoiceNumber || `Payment #${p.id}`}</span>
                 <span className="mx-1.5">·</span>
                 {p.topFlag ? <span className={p.status === "Held" ? "text-amber" : "text-muted"}>{flagLabel(p.topFlag)}</span> : relativeTime(p.createdAt)}
               </p>
@@ -49,9 +49,25 @@ export function ActivityFeed({ payments, loading, limit }: { payments?: PaymentS
               <StatusPill status={p.status} flags={p.flags} />
             </div>
             <ChevronRight className="hidden size-4 text-muted opacity-0 transition-opacity group-hover:opacity-100 sm:block" strokeWidth={1.5} />
-          </Link>
+          </RowLink>
         </li>
       ))}
     </ul>
+  );
+}
+
+/** Payments proposed outside Warden (e.g. from the CLI) have no invoice page to open. */
+function RowLink({ invoiceId, className, children }: { invoiceId: string; className: string; children: React.ReactNode }) {
+  if (!invoiceId) {
+    return (
+      <div className={className} title="No invoice file: this payment was proposed directly on the contract">
+        {children}
+      </div>
+    );
+  }
+  return (
+    <Link href={`/invoices/${invoiceId}`} className={className}>
+      {children}
+    </Link>
   );
 }

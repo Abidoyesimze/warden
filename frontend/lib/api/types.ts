@@ -20,7 +20,7 @@ export interface Vendor {
   name: string;
   destChain: string; // e.g. "base", "sol"
   destAsset: string; // e.g. "USDC"
-  destAssetId: string; // 1Click asset id
+  destAssetId?: string; // 1Click asset id (the backend may send it as destAsset instead)
   destAddress: string;
   maxAmount: string;
   active: boolean;
@@ -112,32 +112,34 @@ export type ChainEventName =
   | "payment_settled"
   | "vendor_updated"
   | "limits_updated"
-  | "paused";
+  | "paused"
+  | "quote_rejected";
 
 export interface ChainEvent {
-  name: ChainEventName;
+  name: ChainEventName | (string & {});
   at: string; // ISO
-  txHash: string; // NEAR tx hash
+  txHash: string | null; // NEAR tx hash; null for off-chain steps
   actor: string; // account that signed
   detail?: string;
 }
 
+/** Any field can be null while 1Click is still settling. */
 export interface Receipt {
-  nearTxHash: string;
-  destChain: string;
-  destAsset: string;
+  nearTxHash: string | null;
+  destChain: string | null;
+  destAsset: string | null;
   destTxHash: string | null;
-  amountOut: string;
-  recipient: string;
-  settledAt: string;
-  intentsRef: string;
+  amountOut: string | null;
+  recipient: string | null;
+  settledAt: string | null;
+  intentsRef: string | null;
 }
 
 export interface Attestation {
   model: string;
   chatId: string;
   hash: string; // attestation_hash stored on-chain
-  signingAddress: string;
+  signingAddress: string | null;
   verified: boolean;
   checkedAt: string;
 }
@@ -168,6 +170,17 @@ export type UploadEvent =
   | { stage: UploadStage; extracted?: Partial<ExtractedInvoice>; rules?: RuleResult[]; invoiceId?: string; decision?: Decision; status?: ContractStatus }
   | { stage: "error"; message: string };
 
+/** What POST /invoices/:id/verify returns. */
+export interface VerifyResponse {
+  invoiceHashMatches: boolean;
+  attestationHashMatches: boolean;
+  recomputedInvoiceHash: string;
+  recomputedAttestationHash: string;
+  onChainInvoiceHash: string;
+  onChainAttestationHash: string;
+}
+
+/** What the verify panel shows. */
 export interface VerifyResult {
   invoiceHash: { stored: string; onChain: string; match: boolean };
   attestationHash: { stored: string; onChain: string; match: boolean };

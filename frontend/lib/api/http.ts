@@ -2,7 +2,7 @@
 // Owner actions are signed in the browser wallet first; the backend never holds the owner's key.
 
 import { ApiError, type WardenApi } from "./client";
-import type { InvoiceDetail, PaymentSummary, Treasury, UploadEvent, VerifyResult } from "./types";
+import type { InvoiceDetail, PaymentSummary, Treasury, UploadEvent, VerifyResponse, VerifyResult } from "./types";
 import { getWallet } from "../wallet";
 
 const POLL_MS = 5000;
@@ -21,14 +21,30 @@ async function request<T>(base: string, path: string, init?: RequestInit): Promi
   return (await res.json()) as T;
 }
 
+/** Turns the backend's flat verify response into the stored/on-chain pairs the panel shows. */
+export function toVerifyResult(r: VerifyResponse): VerifyResult {
+  return {
+    invoiceHash: { stored: r.recomputedInvoiceHash, onChain: r.onChainInvoiceHash, match: r.invoiceHashMatches },
+    attestationHash: { stored: r.recomputedAttestationHash, onChain: r.onChainAttestationHash, match: r.attestationHashMatches },
+  };
+}
+
+/** The backend sends file links relative to itself; point them at the proxy. */
+export function withFileBase(invoice: InvoiceDetail, base: string): InvoiceDetail {
+  const url = invoice.fileUrl;
+  return url && url.startsWith("/") ? { ...invoice, fileUrl: `${base}${url}` } : invoice;
+}
+
 export function createHttpApi(base: string): WardenApi {
   const json = { "Content-Type": "application/json" };
+  const execute = (paymentId: number) =>
+    request(base, `/payments/${paymentId}/execute`, { method: "POST", headers: json, body: "{}" }).then(() => undefined);
   return {
     mode: "live",
     getTreasury: () => request<Treasury>(base, "/treasury"),
     listPayments: () => request<PaymentSummary[]>(base, "/payments"),
     listReview: () => request<PaymentSummary[]>(base, "/payments/review"),
-    getInvoice: (id) => request<InvoiceDetail>(base, `/invoices/${encodeURIComponent(id)}`),
+    getInvoice: async (id) => withFileBase(await request<InvoiceDetail>(base, `/invoices/${encodeURIComponent(id)}`), base),
 
     async uploadInvoice(file: File, onEvent: (e: UploadEvent) => void) {
       onEvent({ stage: "uploading" });
@@ -68,14 +84,16 @@ export function createHttpApi(base: string): WardenApi {
 
     async approve(paymentId) {
       await getWallet().signApprove(paymentId);
-      await request(base, `/payments/${paymentId}/execute`, { method: "POST", headers: json, body: "{}" });
+      await execute(paymentId);
     },
+
+    finishApproval: execute,
 
     async reject(paymentId, _invoice, reason) {
       await getWallet().signReject(paymentId, reason);
     },
 
-    verify: (id) => request<VerifyResult>(base, `/invoices/${encodeURIComponent(id)}/verify`, { method: "POST" }),
+    verify: async (id) => toVerifyResult(await request<VerifyResponse>(base, `/invoices/${encodeURIComponent(id)}/verify`, { method: "POST" })),
 
     async setPaused(paused) {
       await getWallet().signSetPaused(paused);

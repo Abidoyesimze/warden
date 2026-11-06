@@ -9,7 +9,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { api, DEMO_MODE, toUserError } from "@/lib/api";
 import type { PaymentSummary, Vendor } from "@/lib/api/types";
 import { flagLabel } from "@/lib/flags";
-import { chainName, cn } from "@/lib/format";
+import { chainName, cn, assetSymbol } from "@/lib/format";
 
 const LIMIT_ONLY = new Set(["OVER_AUTO_PAY_LIMIT", "OVER_VENDOR_MAX"]);
 
@@ -78,7 +78,7 @@ export function ApproveDialog({
               </Line>
               <Line label="Pays to">
                 <span className="block">
-                  {vendor.destAsset} on {chainName(vendor.destChain)}
+                  {assetSymbol(vendor.destAsset)} on {chainName(vendor.destChain)}
                 </span>
                 <Hash value={vendor.destAddress} full />
                 <span className="mt-0.5 block text-[11px] text-muted">From your approved supplier list. Never from the invoice.</span>

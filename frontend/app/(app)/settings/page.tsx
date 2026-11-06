@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardBody, CardHeader } from "@/components/ui/card";
 import { api, DEMO_MODE, useQuery } from "@/lib/api";
 import { nearAccountUrl } from "@/lib/format";
-import { getWallet } from "@/lib/wallet";
+import { useOwnerWallet } from "@/components/wallet-provider";
 
 export default function SettingsPage() {
   const treasury = useQuery("treasury", () => api.getTreasury());
   const t = treasury.data;
-  const account = DEMO_MODE ? t?.ownerId : getWallet().accountId;
+  const wallet = useOwnerWallet();
+  const account = DEMO_MODE ? t?.ownerId : wallet.accountId;
+  const wrongAccount = !DEMO_MODE && account && t && account !== t.ownerId;
 
   return (
     <>
@@ -20,19 +22,38 @@ export default function SettingsPage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader title="Owner wallet" description="You approve held payments and change limits by signing with this NEAR account." />
-          <CardBody className="flex items-center justify-between gap-4">
-            {account ? (
-              <div className="flex items-center gap-2">
-                <span className="size-1.5 rounded-full bg-mint" aria-hidden />
-                <Hash value={account} href={nearAccountUrl(account)} full />
+          <CardBody className="space-y-3">
+            <div className="flex items-center justify-between gap-4">
+              {account ? (
+                <div className="flex min-w-0 items-center gap-2">
+                  <span className={wrongAccount ? "size-1.5 rounded-full bg-amber" : "size-1.5 rounded-full bg-mint"} aria-hidden />
+                  <Hash value={account} href={nearAccountUrl(account)} full />
+                </div>
+              ) : (
+                <p className="text-[13px] text-muted">No wallet connected.</p>
+              )}
+              <div className="flex shrink-0 gap-2">
+                {account && !DEMO_MODE && (
+                  <Button size="sm" variant="ghost" onClick={wallet.disconnect}>
+                    Disconnect
+                  </Button>
+                )}
+                <Button
+                  size="sm"
+                  onClick={wallet.connect}
+                  disabled={DEMO_MODE || !wallet.ready}
+                  title={DEMO_MODE ? "Wallet is simulated in demo mode" : undefined}
+                >
+                  <Wallet />
+                  {account ? "Switch wallet" : "Connect wallet"}
+                </Button>
               </div>
-            ) : (
-              <p className="text-[13px] text-muted">No wallet connected.</p>
+            </div>
+            {wrongAccount && (
+              <p role="alert" className="text-[13px] text-amber">
+                This isn&apos;t the treasury owner. The contract will refuse approvals from it. Switch to {t.ownerId}.
+              </p>
             )}
-            <Button size="sm" disabled={DEMO_MODE} title={DEMO_MODE ? "Wallet is simulated in demo mode" : undefined}>
-              <Wallet />
-              {account ? "Switch wallet" : "Connect wallet"}
-            </Button>
           </CardBody>
         </Card>
 

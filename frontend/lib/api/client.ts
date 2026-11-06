@@ -12,6 +12,8 @@ export interface WardenApi {
   /** Owner approves a held payment (wallet-signed), then the backend executes it. */
   approve(paymentId: number, invoiceId: string): Promise<void>;
   reject(paymentId: number, invoiceId: string, reason: string): Promise<void>;
+  /** Asks the backend to execute a payment the owner already approved on-chain (after a wallet redirect). */
+  finishApproval(paymentId: number): Promise<void>;
   verify(invoiceId: string): Promise<VerifyResult>;
   /** Owner-only, wallet-signed contract calls. */
   setPaused(paused: boolean): Promise<void>;

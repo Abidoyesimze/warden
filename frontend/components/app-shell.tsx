@@ -1,6 +1,6 @@
 "use client";
 
-import { FileUp, Inbox, LayoutGrid, Menu, Settings, ShieldCheck, Wallet, X } from "lucide-react";
+import { FileUp, Inbox, LayoutGrid, LogOut, Menu, Settings, ShieldCheck, Wallet, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { api, DEMO_MODE, useQuery } from "@/lib/api";
 import { DEMO_BUSINESS } from "@/lib/api/demo-data";
 import { cn, nearAccountUrl } from "@/lib/format";
-import { getWallet } from "@/lib/wallet";
+import { useOwnerWallet } from "@/components/wallet-provider";
 
 const NAV = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutGrid },
@@ -122,7 +122,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 <span className="label">Treasury</span>
                 {treasury.data ? <Amount value={treasury.data.balance} /> : <span className="skeleton inline-block h-3 w-16" />}
               </div>
-              <WalletButton />
+              <WalletButton ownerId={treasury.data?.ownerId} />
             </div>
           </header>
           <main className="mx-auto w-full max-w-[1280px] flex-1 px-4 py-6 lg:px-6">{children}</main>
@@ -132,23 +132,48 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   );
 }
 
-function WalletButton() {
-  const account = DEMO_MODE ? "adire-demo.near" : getWallet().accountId;
+function WalletButton({ ownerId }: { ownerId?: string }) {
+  const { accountId, ready, connect, disconnect } = useOwnerWallet();
+  const wrongAccount = !DEMO_MODE && accountId && ownerId && accountId !== ownerId;
+
+  if (!accountId) {
+    return (
+      <button
+        type="button"
+        onClick={connect}
+        disabled={!ready}
+        className="inline-flex h-8 items-center gap-2 rounded-input px-2.5 text-[12px] hairline hover:bg-surface-2 disabled:opacity-60"
+        title="Connect the treasury owner's NEAR wallet to approve payments"
+      >
+        <Wallet className="size-3.5 text-muted" strokeWidth={1.5} />
+        <span className="text-fg">{ready ? "Connect wallet" : "Loading wallet…"}</span>
+      </button>
+    );
+  }
+
   return (
-    <Link
-      href="/settings"
-      className="inline-flex h-8 items-center gap-2 rounded-input px-2.5 text-[12px] hairline hover:bg-surface-2"
-      title={account ? `Signed in as ${account}` : "Connect your NEAR wallet"}
-    >
-      <Wallet className="size-3.5 text-muted" strokeWidth={1.5} />
-      {account ? (
-        <>
-          <span className="size-1.5 rounded-full bg-mint" aria-hidden />
-          <span className="num max-w-[140px] truncate text-fg">{account}</span>
-        </>
-      ) : (
-        <span className="text-fg">Connect wallet</span>
+    <div className="inline-flex h-8 items-center rounded-input hairline">
+      <Link
+        href="/settings"
+        className="inline-flex h-full items-center gap-2 rounded-l-input px-2.5 text-[12px] hover:bg-surface-2"
+        title={wrongAccount ? `Signed in as ${accountId}, but the treasury owner is ${ownerId}` : `Signed in as ${accountId}`}
+      >
+        <Wallet className="size-3.5 text-muted" strokeWidth={1.5} />
+        <span className={cn("size-1.5 rounded-full", wrongAccount ? "bg-amber" : "bg-mint")} aria-hidden />
+        <span className="num max-w-[140px] truncate text-fg">{accountId}</span>
+        {wrongAccount && <span className="text-amber">not owner</span>}
+      </Link>
+      {!DEMO_MODE && (
+        <button
+          type="button"
+          onClick={disconnect}
+          className="inline-flex h-full items-center border-l border-line px-2 text-muted hover:bg-surface-2 hover:text-fg"
+          aria-label="Disconnect wallet"
+          title="Disconnect wallet"
+        >
+          <LogOut className="size-3.5" strokeWidth={1.5} />
+        </button>
       )}
-    </Link>
+    </div>
   );
 }

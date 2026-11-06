@@ -80,6 +80,7 @@ const CHAIN_EXPLORERS: Record<string, string> = {
   pol: "https://polygonscan.com/tx/",
   bsc: "https://bscscan.com/tx/",
   sol: "https://solscan.io/tx/",
+  solana: "https://solscan.io/tx/",
   tron: "https://tronscan.org/#/transaction/",
   near: "https://nearblocks.io/txns/",
 };
@@ -95,10 +96,25 @@ export const CHAIN_NAMES: Record<string, string> = {
   pol: "Polygon",
   bsc: "BNB Chain",
   sol: "Solana",
+  solana: "Solana",
   tron: "Tron",
   near: "NEAR",
   ton: "TON",
 };
 export function chainName(c: string): string {
   return CHAIN_NAMES[c] ?? c.toUpperCase();
+}
+
+// 1Click asset ids from HACKATHON-NOTES.md, mapped to the symbol people recognise.
+const ASSET_SYMBOLS: Record<string, string> = {
+  "nep141:base-0x833589fcd6edb6e08f4c7c32d4f71b54bda02913.omft.near": "USDC",
+  "nep141:sol-c800a4bd850783ccb82c2b2c7e84175443606352.omft.near": "USDT",
+  "nep141:tron-d28a265909efecdcee7c5028585214ea0b96f015.omft.near": "USDT",
+  "nep141:17208628f84f5d6ad33f0da3bbbeb27ffcb398eac501a31bd6ad2011e36133a1": "USDC",
+};
+
+/** "USDC" for a 1Click asset id; plain symbols pass through. */
+export function assetSymbol(asset: string | null | undefined): string {
+  if (!asset) return "";
+  return ASSET_SYMBOLS[asset] ?? (asset.startsWith("nep141:") ? "token" : asset);
 }

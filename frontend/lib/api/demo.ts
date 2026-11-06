@@ -174,6 +174,10 @@ class DemoStore implements WardenApi {
     void this.runPayment(inv).catch(() => undefined);
   }
 
+  async finishApproval() {
+    // Demo approvals run the payment straight away; nothing to resume.
+  }
+
   async reject(_paymentId: number, invoiceId: string, reason: string) {
     const inv = this.find(invoiceId);
     if (inv.payment.status !== "Held") throw new ApiError("This payment is no longer waiting for review.");

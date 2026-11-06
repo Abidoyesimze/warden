@@ -22,7 +22,7 @@ export function ReviewCard({ payment, vendor }: { payment: PaymentSummary; vendo
           <h3 className="truncate text-[14px] font-medium text-fg">{payment.vendorName}</h3>
           <Amount value={payment.amount} />
           <span className="text-[12px] text-muted">
-            <span className="num">{payment.invoiceNumber}</span> · {relativeTime(payment.createdAt)}
+            <span className="num">{payment.invoiceNumber || `Payment #${payment.id}`}</span> · {relativeTime(payment.createdAt)}
           </span>
         </div>
         <p className="mt-1.5 flex items-start gap-1.5 text-[13px] text-amber">
@@ -34,9 +34,11 @@ export function ReviewCard({ payment, vendor }: { payment: PaymentSummary; vendo
         </p>
       </div>
       <div className="flex gap-2">
-        <Button size="sm" variant="ghost" asChild>
-          <Link href={`/invoices/${payment.invoiceId}`}>Open</Link>
-        </Button>
+        {payment.invoiceId && (
+          <Button size="sm" variant="ghost" asChild>
+            <Link href={`/invoices/${payment.invoiceId}`}>Open</Link>
+          </Button>
+        )}
         <Button size="sm" variant="danger" onClick={() => setReject(true)}>
           Reject
         </Button>

@@ -408,7 +408,7 @@ function buildEvents(f: Fixture, paymentId: number, createdMin: number): ChainEv
   return out;
 }
 
-export function buildReceipt(vendor: Vendor, amount: string, seed: string, settledAt: string, nearTxHash: string): Receipt {
+export function buildReceipt(vendor: Vendor, amount: string, seed: string, settledAt: string, nearTxHash: string | null): Receipt {
   return {
     nearTxHash,
     destChain: vendor.destChain,

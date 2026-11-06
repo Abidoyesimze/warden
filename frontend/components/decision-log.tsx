@@ -4,11 +4,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { ChainEvent } from "@/lib/api/types";
 import { cn, formatDate, formatTime, nearTxUrl, shortHash } from "@/lib/format";
 
-const TONE: Partial<Record<ChainEvent["name"], string>> = {
+const TONE: Record<string, string> = {
   payment_held: "text-amber",
   payment_rejected: "text-coral",
   payment_settled: "text-mint",
   payment_approved: "text-fg",
+  quote_rejected: "text-coral",
 };
 
 /** Terminal-style log of every on-chain event for this payment, with explorer links. */
@@ -25,7 +26,7 @@ export function DecisionLog({ events, paymentId, contractId }: { events: ChainEv
         <AnimatePresence initial={false}>
           {events.map((e, i) => (
             <motion.li
-              key={`${e.name}-${e.txHash}`}
+              key={`${e.name}-${e.txHash ?? e.at}-${i}`}
               initial={{ opacity: 0, x: -4 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.18, ease: "easeOut" }}
@@ -40,9 +41,13 @@ export function DecisionLog({ events, paymentId, contractId }: { events: ChainEv
                 {e.actor}
                 {e.detail && <span className="text-fg/60"> · {e.detail}</span>}
               </span>
-              <a href={nearTxUrl(e.txHash)} target="_blank" rel="noreferrer" className="text-right text-fg/70 underline decoration-line underline-offset-2 hover:text-fg">
-                {shortHash(e.txHash, 5, 4)} ↗
-              </a>
+              {e.txHash ? (
+                <a href={nearTxUrl(e.txHash)} target="_blank" rel="noreferrer" className="text-right text-fg/70 underline decoration-line underline-offset-2 hover:text-fg">
+                  {shortHash(e.txHash, 5, 4)} ↗
+                </a>
+              ) : (
+                <span className="text-right text-muted">off-chain</span>
+              )}
             </motion.li>
           ))}
         </AnimatePresence>

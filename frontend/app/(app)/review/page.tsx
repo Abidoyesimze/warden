@@ -38,7 +38,7 @@ export default function ReviewPage() {
       ) : (
         <div className="space-y-3">
           {review.data?.map((p) => (
-            <ReviewCard key={p.invoiceId} payment={p} vendor={p.vendorId ? vendors.get(p.vendorId) ?? null : null} />
+            <ReviewCard key={p.id} payment={p} vendor={p.vendorId ? vendors.get(p.vendorId) ?? null : null} />
           ))}
         </div>
       )}

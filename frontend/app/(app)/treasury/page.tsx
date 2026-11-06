@@ -15,7 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { api, DEMO_MODE, toUserError, useQuery } from "@/lib/api";
 import type { Limits } from "@/lib/api/types";
-import { chainName, formatAmount, nearAccountUrl } from "@/lib/format";
+import { chainName, formatAmount, nearAccountUrl, assetSymbol } from "@/lib/format";
 
 export default function TreasuryPage() {
   const treasury = useQuery("treasury", () => api.getTreasury());
@@ -119,7 +119,7 @@ export default function TreasuryPage() {
                     <p className="num text-[11px] text-muted">{v.id}</p>
                   </td>
                   <td className="px-4 py-3 text-fg">
-                    {v.destAsset} <span className="text-muted">on {chainName(v.destChain)}</span>
+                    {assetSymbol(v.destAsset)} <span className="text-muted">on {chainName(v.destChain)}</span>
                   </td>
                   <td className="px-4 py-3">
                     <Hash value={v.destAddress} head={8} tail={6} />

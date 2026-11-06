@@ -10,7 +10,7 @@ export const DEMO_MODE = process.env.NEXT_PUBLIC_DEMO_MODE !== "false";
 
 export const api: WardenApi = DEMO_MODE
   ? createDemoApi()
-  : createHttpApi(process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000");
+  : createHttpApi("/backend"); // proxied to NEXT_PUBLIC_API_URL by next.config.ts
 
 export interface QueryState<T> {
   data: T | undefined;
