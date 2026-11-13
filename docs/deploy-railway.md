@@ -10,7 +10,7 @@ This runs the Warden backend (Express + SQLite) against the testnet contract, so
 4. **Settings → Deploy → Custom Start Command:** `npm run start -w backend`
 5. **Settings → Networking → Generate Domain.** Railway sets `PORT` itself, and the backend reads it.
 
-Node 20 or newer is required (root `package.json` `engines`).
+Node 22 is pinned (root `package.json` `engines` and `.nvmrc`), the version the backend is tested on. If startup fails with `npm error code 139` (a native crash, usually `better-sqlite3` on an unsupported Node version), check the build log's Node version.
 
 ## 2. Add a volume
 
