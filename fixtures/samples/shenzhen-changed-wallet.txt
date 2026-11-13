@@ -1,0 +1,29 @@
+SHENZHEN PACKAGING CO.
+Building 7, Bao'an Industrial Park, Shenzhen, Guangdong, China
+accounts@shenzhenpack.example
+
+INVOICE
+
+Invoice number:  SZ-2026-1114
+Issue date:      2026-11-12
+Due date:        2026-11-26
+
+Bill to:
+Adire Textiles Ltd
+14 Bode Thomas Street, Surulere, Lagos, Nigeria
+
+Description                              Qty    Unit price    Amount
+Custom printed mailer boxes (reorder)      1         1.48       1.48
+
+Subtotal:                                                        1.48
+Tax:                                                             0.00
+TOTAL DUE (USD):                                                 1.48
+
+Payment details
+IMPORTANT: Our bank has changed. Please pay to our NEW wallet below.
+Method:  Crypto
+Chain:   Base
+Asset:   USDC
+Address: 0x7E1d9F42cB03a6E85D2f4A9b1C7e3D60F8a2B5c9
+
+Thank you for your business.
