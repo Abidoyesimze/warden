@@ -5,12 +5,12 @@ This runs the Warden backend (Express + SQLite) against the testnet contract, so
 ## 1. Create the service
 
 1. Railway → **New Project → Deploy from GitHub repo** → `Abidoyesimze/warden`.
-2. **Settings → Source → Root Directory:** leave it empty (the repo root). The backend imports the `agent/` workspace, so Railway must install from the root `package.json`.
-3. **Settings → Build → Custom Build Command:** `npm ci`
-4. **Settings → Deploy → Custom Start Command:** `npm run start -w backend`
+2. **Settings → Source → Root Directory:** leave it empty (the repo root).
+3. Railway builds from the root [`Dockerfile`](../Dockerfile) automatically. Leave **Custom Build Command** and **Custom Start Command** empty; the Dockerfile installs the `backend` and `agent` workspaces on Node 22 and starts the server.
+4. **Settings → Deploy → Healthcheck Path:** `/health`
 5. **Settings → Networking → Generate Domain.** Railway sets `PORT` itself, and the backend reads it.
 
-Node 22 is pinned (root `package.json` `engines` and `.nvmrc`), the version the backend is tested on. If startup fails with `npm error code 139` (a native crash, usually `better-sqlite3` on an unsupported Node version), check the build log's Node version.
+The Dockerfile pins Node 22, the version the backend is tested on. Without it, Railway's auto-builder picked Node 20 and the server crashed at startup with `npm error code 139`.
 
 ## 2. Add a volume
 
@@ -43,10 +43,11 @@ Do not set `PORT`; Railway provides it.
 ## 4. Check it
 
 ```bash
-curl https://<your-app>.up.railway.app/vendors
+curl https://<your-app>.up.railway.app/health     # {"ok":true}
+curl https://<your-app>.up.railway.app/treasury   # live contract state
 ```
 
-It should return the three registered suppliers.
+`/treasury` should show the 15 USDC balance and the three registered suppliers.
 
 ## 5. Point a live frontend at it
 

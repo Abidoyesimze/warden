@@ -1,0 +1,11 @@
+**/node_modules
+.git
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+data
+frontend/.next
+smart-contract/target
+*.log
