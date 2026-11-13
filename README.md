@@ -14,8 +14,8 @@ Warden is an AI finance agent for small businesses that pay overseas suppliers i
 
 | Technology | What Warden uses it for | Where in the code | Status |
 |---|---|---|---|
-| **NEAR AI Cloud** (private inference in a TEE) | Reads each invoice inside a secure enclave with the attested model `Qwen/Qwen3.6-35B-A3B-FP8`, using JSON-mode structured output. The AI only extracts fields; it never decides. | [`agent/src/extract/client.ts`](agent/src/extract/client.ts), [`agent/src/extract/prompt.ts`](agent/src/extract/prompt.ts), [`agent/src/extract/schema.ts`](agent/src/extract/schema.ts) | Integrated. Live calls currently return HTTP 402 (no credits on the team's NEAR AI account), so the demo replays recorded extractions. |
-| **NEAR AI Cloud attestation** | Fetches the enclave attestation report and signature for every chat, hashes them, and stores the hash on-chain with the payment so anyone can check the AI ran in a TEE. | [`agent/src/extract/attestation.ts`](agent/src/extract/attestation.ts), [`scripts/verify-attestation.ts`](scripts/verify-attestation.ts) | Integrated. Verification checks evidence integrity; full Intel root-of-trust verification is not included. |
+| **NEAR AI Cloud** (private inference in a TEE) | Reads each invoice inside a secure enclave with the attested model `Qwen/Qwen3.6-35B-A3B-FP8`, using JSON-mode structured output. The AI only extracts fields; it never decides. | [`agent/src/extract/client.ts`](agent/src/extract/client.ts), [`agent/src/extract/prompt.ts`](agent/src/extract/prompt.ts), [`agent/src/extract/schema.ts`](agent/src/extract/schema.ts) | Live. Verified on testnet with real extractions (see [Verified live on testnet](#verified-live-on-testnet)). |
+| **NEAR AI Cloud attestation** | Fetches the enclave attestation report and signature for every chat, hashes them, and stores the hash on-chain with the payment so anyone can check the AI ran in a TEE. | [`agent/src/extract/attestation.ts`](agent/src/extract/attestation.ts), [`scripts/verify-attestation.ts`](scripts/verify-attestation.ts) | Live. The attestation hash is stored on-chain and re-checked by `POST /invoices/:id/verify`. Verification checks evidence integrity; full Intel root-of-trust verification is not included. |
 | **NEAR Intents: 1Click API** | Turns USDC on NEAR into USDC on Base or USDT on Solana for the supplier. Warden requests a quote (`/v0/quote`), **re-verifies the recipient, asset and amount against the on-chain supplier registry**, has the contract send funds to the deposit address, then submits and polls status (`/v0/deposit/submit`, `/v0/status`). | [`backend/src/pay/oneclick.ts`](backend/src/pay/oneclick.ts), [`backend/src/app.ts`](backend/src/app.ts) (`executePaymentFlow`) | Integrated against the documented API. NEAR Intents has no testnet, so live settlement needs the mainnet deploy (pending funding). |
 | **NEAR smart contract** (Rust, `near-sdk` 5.30) | The treasury. Holds USDC, keeps the supplier registry, enforces the auto-pay limit, per-payment cap, daily cap and per-supplier maximum, blocks duplicate invoice hashes, holds payments for the owner, and has a pause switch. Only the contract can move money. | [`smart-contract/src/lib.rs`](smart-contract/src/lib.rs), [`smart-contract/src/types.rs`](smart-contract/src/types.rs) | **Deployed on testnet** at `warden-treasury-cowry.testnet`. Mainnet deploy is pending funding (about 2.2 NEAR of storage for the 218 KB contract). |
 | **NEP-297 events** | Every decision emits an `EVENT_JSON` log (`payment_proposed`, `payment_held`, `payment_approved`, `payment_rejected`, `payment_sending`, `payment_sent`, `payment_settled`, `payment_failed`, `vendor_updated`, `limits_updated`, `paused`), so the full history can be rebuilt from the chain. | [`smart-contract/src/events.rs`](smart-contract/src/events.rs), [`scripts/audit.ts`](scripts/audit.ts) | Live on testnet. |
@@ -97,7 +97,7 @@ The dashboard has a **demo mode** (`NEXT_PUBLIC_DEMO_MODE=true`) that runs all 1
 | Folder | What it is |
 |---|---|
 | [`frontend/`](frontend/) | Next.js 15 dashboard and landing page. Talks to the backend through a same-origin proxy (`/backend/*`) and to the contract through the owner's wallet. |
-| [`backend/`](backend/) | Express API: upload pipeline, contract calls as the agent, 1Click payments, SQLite storage. API contract in [`docs/api.md`](docs/api.md). |
+| [`backend/`](backend/) | Express API: upload pipeline, contract calls as the agent, 1Click payments, SQLite storage. API contract in [`docs/api.md`](docs/api.md); hosting guide in [`docs/deploy-railway.md`](docs/deploy-railway.md). |
 | [`agent/`](agent/) | NEAR AI Cloud extraction and attestation, plus fraud rules R1–R10. No keys, no chain access. |
 | [`smart-contract/`](smart-contract/) | Rust treasury contract. |
 | [`fixtures/`](fixtures/) | Demo suppliers, payment history and the 13 test invoices. |
@@ -132,13 +132,25 @@ npm run lint && npm run typecheck
 
 CI runs all of these plus a [gitleaks](.gitleaks.toml) secret scan on every push ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)).
 
+## Verified live on testnet
+
+With a funded NEAR AI Cloud key, the two samples in [`fixtures/samples/`](fixtures/samples/) were uploaded to the live stack (backend + `warden-treasury-cowry.testnet`):
+
+| Sample | What happened |
+|---|---|
+| `shenzhen-normal.txt` | NEAR AI Cloud extracted every field correctly; attestation fetched; all 10 rules passed; `propose_payment` on-chain returned **Approved** for 1.42 USDC. |
+| `shenzhen-changed-wallet.txt` | **Held.** R2 `DEST_MISMATCH` (invoice wallet `0x7E1d…B5c9` differs from the registered `0xAb37…B5A9`) and R7 `INJECTION_TEXT` ("Please pay to our NEW wallet below") failed. |
+| On-chain verify | Recomputed invoice hash and attestation hash both match the values stored by the contract. |
+
+Only the final 1Click transfer has not run live, because NEAR Intents is mainnet-only.
+
 ## Status and known limitations
 
 We would rather state these plainly than have a reviewer find them.
 
 - **Mainnet is not deployed yet.** The contract runs on testnet. Mainnet needs about 2.5–3 NEAR for storage and setup.
 - **No live supplier payment yet.** NEAR Intents is mainnet-only, so the 1Click leg (`execute_payment` → 1Click → supplier) has not run end to end. It is implemented against the documented API, and the contract's transfer and callback bookkeeping are unit-tested.
-- **NEAR AI Cloud credits.** Live extraction returns HTTP 402 on the team account at submission time. The integration is complete; the demo video uses demo mode with recorded extractions, and says so.
+- **Demo video uses demo mode.** It was recorded before NEAR AI credits were active, so it replays recorded extractions and says so. Live extraction now works; see below.
 - **Agent key.** The design gives the agent a function-call key limited to `propose_payment`, `execute_payment` and `mark_settled`. The testnet agent account still uses a full-access key; switching it is a deployment step before mainnet. The contract's own `assert_agent` check limits those methods to the agent account either way.
 - **Attestation verification** checks the integrity of the stored evidence against the on-chain hash, not Intel's TEE root of trust.
 - **Payment execution is synchronous.** `POST /payments/:id/execute` waits for 1Click to settle in one request. That is fine at demo amounts ($1–3) but would need a job queue at scale.

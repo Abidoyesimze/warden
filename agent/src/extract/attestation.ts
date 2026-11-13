@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 
 // Endpoints and field names confirmed against the NEAR AI Cloud docs
 // (docs.near.ai/cloud/guides/e2ee-chat-completions, github.com/nearai/nearai-cloud-verifier)
@@ -44,8 +44,9 @@ export async function fetchAttestationEvidence(opts: {
   };
 }
 
+/** NEAR AI Cloud requires exactly 32 bytes (64 hex chars). */
 function cryptoRandomNonce(): string {
-  return createHash("sha256").update(`${Date.now()}-${Math.random()}`).digest("hex").slice(0, 32);
+  return randomBytes(32).toString("hex");
 }
 
 function sha256Hex(value: unknown): string {
