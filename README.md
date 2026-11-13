@@ -4,6 +4,7 @@
 
 Warden is an AI finance agent for small businesses that pay overseas suppliers in stablecoins. It reads each supplier invoice privately on **NEAR AI Cloud**, checks it against ten fixed fraud rules, and asks a **NEAR smart contract** to pay or hold it. Clean invoices are paid through **NEAR Intents (1Click API)** to the supplier's registered wallet on Base or Solana. Suspicious ones wait for the owner, who approves or rejects them with their own **NEAR wallet**. Every decision is recorded on-chain.
 
+- **Live app (testnet):** https://warden-nine-gules.vercel.app. Upload an invoice from [`fixtures/samples/`](fixtures/samples/) and watch the real NEAR AI extraction, fraud checks and on-chain decision. Change the invoice number first: the contract rejects any invoice it has already seen, so re-uploading an unchanged sample shows the duplicate check instead. (Backend on Railway; only the owner wallet can approve held payments.)
 - **Demo video:** _add the YouTube link here before submitting_
 - **Track:** AI Security & Defense (also fits Real-World Money and Autonomous Business)
 - **Live contract (testnet):** [`warden-treasury-cowry.testnet`](https://testnet.nearblocks.io/address/warden-treasury-cowry.testnet), funded with 15 testnet USDC
